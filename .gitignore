@@ -1,0 +1,61 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Django-specific
+*.log
+*.pot
+*.pyc
+*.pyo
+__pycache__/
+local_settings.py
+
+# Secret key
+secret.key
+
+# Database
+*.sqlite3
+*.db
+
+# Media files
+media/
+
+# Static files
+static/
+
+# Development/Environment-specific files
+.env
+.vscode/
+*.pyc
+
+# Ignore migrations, as they can be generated
+**/migrations/*.py
+**/migrations/*.pyc
+
+# Ignore pipenv virtual environment
+Pipfile
+Pipfile.lock
+
+# Ignore coverage reports
+htmlcov/
+
+# Ignore test database
+db.sqlite3
+
+# Ignore compiled Python modules
+*.pyc
+
+# Ignore IDE settings
+.idea/
+*.iml
+*.pyt
+
+# Ignore editor temporary files
+*~
+
+# Ignore scripts files
+vendor_management_app/migration
+vendor_management_app/scripts
+
