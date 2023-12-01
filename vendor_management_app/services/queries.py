@@ -8,3 +8,6 @@ def get_purchase_orders() -> PurchaseOrder:
 
 def get_historical_performances() -> HistoricalPerformance:
     return HistoricalPerformance.objects.all()
+
+def get_historical_performances(vendor) -> HistoricalPerformance :
+    return HistoricalPerformance.objects.filter(vendor=vendor)
