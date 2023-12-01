@@ -14,7 +14,6 @@ class Vendor(models.Model):
         return self.name
 
 class PurchaseOrder(models.Model):
-    # we can also create this po_number as a primary-key but i follow project requrements as mentioned in pdf file...
     po_number = models.CharField(max_length=50, unique=True)
     vendor = models.ForeignKey(Vendor, on_delete=models.CASCADE)
     order_date = models.DateTimeField()
