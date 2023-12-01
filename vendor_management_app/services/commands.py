@@ -100,7 +100,6 @@ def update_purchase_order(purchase_order: PurchaseOrder, po_number:str, vendor:V
     purchase_order.save()
 
     update_historical_performance_metrics(vendor)
-
     return purchase_order
 
 def delete_purchase_order(purchase_order: PurchaseOrder) -> None:

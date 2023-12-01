@@ -60,11 +60,14 @@ class VendorApi(APIView):
 
     def put(self, request, vendor_id, *args, **kwargs):
         vendor = get_object_or_404(Vendor, id=vendor_id)
-        serializer = self.InputSerializer(data=request.data)
+        serializer = self.InputSerializer(instance=vendor, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
-        vendor = update_vendor(vendor=vendor, **serializer.validated_data)
-        return Response(self.OutputSerializer(vendor).data, status=status.HTTP_202_ACCEPTED)
 
+        # Update other fields
+        vendor = update_vendor(vendor=vendor, **serializer.validated_data)
+
+        return Response(self.OutputSerializer(vendor).data, status=status.HTTP_202_ACCEPTED)
+    
     def delete(self, request, vendor_id, *args, **kwargs):
         vendor = get_object_or_404(Vendor, id=vendor_id)
         delete_vendor(vendor=vendor)
@@ -75,14 +78,15 @@ class PurchaseOrderApi(APIView):
     paginator = PageNumberPagination()
 
     class InputSerializer(serializers.ModelSerializer):
-        vendor_id = serializers.PrimaryKeyRelatedField(queryset=Vendor.objects.all())
+        vendor = serializers.PrimaryKeyRelatedField(queryset=Vendor.objects.all())
 
         class Meta:
             model = PurchaseOrder
-            fields = ['po_number', 'vendor_id', 'order_date', 'delivery_date', 'items', 'quantity', 'status', 'quality_rating', 'issue_date', 'acknowledgment_date']
+            fields = ['po_number', 'vendor', 'order_date', 'delivery_date', 'items', 'quantity', 'status', 'quality_rating', 'issue_date', 'acknowledgment_date']
 
     class OutputSerializer(serializers.ModelSerializer):
         po_id = serializers.IntegerField(source="id")
+        vendor_id = serializers.PrimaryKeyRelatedField(source="vendor", read_only=True)
 
         class Meta:
             model = PurchaseOrder
@@ -120,17 +124,17 @@ class PurchaseOrderApi(APIView):
     def post(self, request, *args, **kwargs):
         serializer = self.InputSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        vendor = serializer.validated_data.pop('vendor_id', None)
+        vendor = serializer.validated_data.pop('vendor', None)
         purchase_order = create_purchase_order(vendor=vendor, **serializer.validated_data)
         return Response(self.OutputSerializer(purchase_order).data, status=status.HTTP_201_CREATED)
 
     def put(self, request, po_id, *args, **kwargs):
         purchase_order = get_object_or_404(PurchaseOrder, id=po_id)
-        serializer = self.InputSerializer(data=request.data)
+        serializer = self.InputSerializer(instance=purchase_order, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
         purchase_order = update_purchase_order(purchase_order=purchase_order, **serializer.validated_data)
         return Response(self.OutputSerializer(purchase_order).data, status=status.HTTP_202_ACCEPTED)
-
+    
     def delete(self, request, po_id, *args, **kwargs):
         purchase_order = get_object_or_404(PurchaseOrder, id=po_id)
         delete_purchase_order(purchase_order=purchase_order)
